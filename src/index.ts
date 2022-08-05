@@ -1,5 +1,11 @@
 import express, { Application, Request, Response } from 'express';
 import morgan from 'morgan';
+import cors from 'cors';
+import helmet from 'helmet';
+import compression from 'compression';
+
+// router
+import UserRoutes from './routers/UserRoutes';
 
 class App {
   public app: Application;
@@ -14,15 +20,13 @@ class App {
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
     this.app.use(morgan('dev'));
+    this.app.use(cors());
+    this.app.use(compression());
+    this.app.use(helmet());
   }
 
   protected routes(): void {
-    this.app.route('/').get((req: Request, res: Response) => {
-      res.json('app from TS');
-    });
-    this.app.route('/').post((req: Request, res: Response) => {
-      res.json(req.body);
-    });
+    this.app.use('/', UserRoutes);
   }
 }
 
